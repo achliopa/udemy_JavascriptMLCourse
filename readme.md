@@ -78,4 +78,33 @@ function onScoreUpdate(dropPosition, bounciness, size, bucketLabel) {
 
 ### Lecture 10 - How K-Nearest Neighbor Works
 
+* Thought Experiment: what wqould happen if we dropped the ball 10 times from almost the same spot (300px)? 
+* K-Nearest Neighbor (with one independent variable)
+	* Drop a ball a bunch of times all around the board, record which bucket it goes to
+	* For each observation subtract drop point from 300px, take absolute value
+	* Sort ther results from least to greatest
+	* Look at the 'k' top  records. What was the most common bucket?
+	Whichever bucket came up most frequently is the one ours will probably go to
+
+### Lecture 11 - Lodash Review
+
+* we will use [lodash](https://lodash.com/docs/). a JS utility library with lots of methods for arrays, objects etc
+* we use JS interpreter tool [JSPlaygrounds](https://stephengrider.github.io/JSPlaygrounds/) to experiment with code
+* if we have a 4x2 nested array and we want to sort it by the row second element we can use stortBy selecting the element based on which we want to sort
+```
+const numbers = [[10,5],[17,2],[34,1],[60,-5]];
+const sorted = _.sortBy(numbers, row => row[1])
+```
+* we map through the sorted array to extract second element `const mapped = _.map(sorted, row => row[1]);`
+* we see a pattern forming where we use the previous result as input for next method .... function chaining maybe??? '_.chain' allows to chain lodash methods passing in result
+```
+_.chain(numbers)
+	.sortBy(row=>row[1])
+	.map(row=>row[1])
+	.value();
+```
+* note that we omit the first argument as its implicitly passe don. vlaue() stops the chain adn returns the result
+
+### Lecture 12 - Implementing KNN
+
 * 
