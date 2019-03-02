@@ -132,4 +132,17 @@ const distance = (point) => {
 _.chain(outputs)
   .map(row => [distance(row[0]),row[3]])
 ```
-* step 2 is to sort results from least to greatest. we use sortBy
+* step 2 is to sort results from least to greatest. we use sortBy inthe chain `.sortBy(row => row[0])`
+* step 3 is to look at top 'k' records. whats the most common bucket??? we use 'slice'. for k=3 `.slice(0,3)`
+
+### Lecture 13 - Finishing KNN Implementation
+
+* step 4 is to look in these k top records. whats the most common bucket? we will use lodash 'countBy' counting the records that meet some criteria. what we get is an object with key value pairs `.countBy(row => row[1])` => '{"1":1,"4":2}'
+* next we will use lodash `.toPairs()` to convert the object to nested array
+* we use sortBy to sort based on second column (occurencies). most will go to bottom
+* i need t get the last element using lodash `.last()` and then `.first()` to get first element (bucket)
+* then we use `.parseInt()` to turn string to bucket and `.value()` to terminate chain
+
+### Lecture 14 - Testing the Algorithm
+
+* 
