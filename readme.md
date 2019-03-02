@@ -107,4 +107,29 @@ _.chain(numbers)
 
 ### Lecture 12 - Implementing KNN
 
-* 
+* we start implementing KNN in JS using lodash in JSPlaygrounds
+* we start by defining a hardcoded dataset as nested array
+```
+const outputs = [
+	[10, .5, 16, 1].
+  [200, .5, 16, 4],
+  [350, .5, 16, 4],
+  [600, .5, 16, 5]
+];
+```
+* for e ach observation, we will subtract droppoint from 300px, and take the absolute value. we will use map. our result table will have to datapoints per observation. droppoint and bucket
+* we put our distance calculation in a helper
+```
+const predictionPoint = 300;
+
+const distance = (point) => {
+	return Math.abs(point - predictionPoint);
+};
+```
+* we implement step 1 
+```
+
+_.chain(outputs)
+  .map(row => [distance(row[0]),row[3]])
+```
+* step 2 is to sort results from least to greatest. we use sortBy
