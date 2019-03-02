@@ -145,4 +145,12 @@ _.chain(outputs)
 
 ### Lecture 14 - Testing the Algorithm
 
+* we take the code and move it in the runAnalysis function in 'score.js'
+* we cp distance function in the js file under analysis method, we cp globals on top and lodash chain in the runAnalysis method. we import lodash
+* we test by running the game for multiple balls to fill our data set. then we 'analyze' to see in which bucket it will fall if we drop it from point 300. this will run our js knn method
+* to test the result we 'reset' and drop 100 balls at 300
+* we see our algorithm is way off
+
+### Lecture 15 - Interpreting bad Results
+
 * 
