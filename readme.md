@@ -153,4 +153,20 @@ _.chain(outputs)
 
 ### Lecture 15 - Interpreting bad Results
 
-* 
+* Steps after realising we have bad results:
+	* Adjust the parameters of the analysis
+	* Add more features to explain the analysis (bounciness, ball size)
+	* Change the prediction point
+	* Accept the fact there isn't a good correlation
+* we will try out different k and rerun the analysis to see if it has effect on accuracy
+
+### Lecture 16 - Test and Training Data
+
+* to improve the algo we need to have a good way to compare accuracy with different settings. e.g for many different prediction points
+* the way to find the ideal K
+	* record a bunch of data points
+	* split that data into a 'training' and a 'test' set
+	* for each 'test' record run KNN using the 'training' data
+	* Does the result of KNN equal the 'test' record bucket??
+
+### Lecture 17 - Randomizing Test Data
