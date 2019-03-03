@@ -170,3 +170,42 @@ _.chain(outputs)
 	* Does the result of KNN equal the 'test' record bucket??
 
 ### Lecture 17 - Randomizing Test Data
+
+* we implement a function to split the dataset in 2 groups
+* we shuffle data to avoid bias `const shuffled = _.shuffle(data);`
+* we split our dataset in 2 (train, test) using slice
+```
+	const testSet = _.slice(shuffled, 0, testCount);
+	const trainingSet = _.slice(shuffled, testCount);
+```
+* we return them `return [testSet,trainingSet];`
+
+### Lecture 18 - Generalizing KNN
+
+* we will run 'runAnalysis()' many times for each row in testSet
+* we put knn core in a helper function 'knn()' which will run on 'outputs' aka trainingSet multiple times
+* in our recurcive runAnalysis each knn run will get a new predicition point which will be the dropPosition of the testSet row
+* so we pass it as param passing it in the 'prediction()'
+```
+function knn(data, point) {
+	 return _.chain(data)
+	  	.map(row => [distance(row[0], point),row[3]])
+		.sortBy(row => row[0])
+		.slice(0,k)
+		.countBy(row => row[1])
+		.toPairs()
+		.sortBy(row => row[1])
+		.last()
+		.first()
+		.parseInt()
+		.value();
+}
+
+function distance(pointA,pointB) {
+	return Math.abs(pointA-pointB);
+}
+```
+
+### Lecture 19 - Gauging Accuracy
+
+* 
