@@ -322,4 +322,61 @@ function distance(pointA,pointB) {
 
 ### Lecture 29 - Normalization with MinMax
 
+* we add a new func passing in the data nad the num of feats aka columns we want to normalize `minMax(data, featureCount)`
+* label should not get normalized
+* we iterate through columns we extract them with .map()
+* we get minn and max of column with lodash
+* we iterating thriugh column applying minMax to each element
+```
+
+function minMax(data, featureCount) {
+	const clonedData = _.cloneDeep(data);
+
+	for(let i=0;i<featureCount;i++){
+		const column = clonedData.map(row=>row[i]);
+		const min = _.min(column);
+		const max = _.max(column);
+		for(let j=0;j<column.length;j++){
+			clonedData[j][i] = (clonedData[j][i] -min) / (max -min);
+		}
+	}
+
+	return clonedData;
+}
+```
+
+### Lecture 30 - Applying Normalization
+
+* we test it in console and apply it in runAnalysis() in the testrtrain split `const [testSet, trainingSet] = splitDataset(minMax(outputs, 3), testSetSize);`
+* we test
+
+### Lecture 31 - Feature Selection with KNN
+
+* our results are bad even after normalizing
+* ou intution says that:
+	* Changes to Drop Position: Predictable changes to Output
+	* Changes to Bounciness: Changes our output, but not predictably
+* In Python plotting the correlation in a scatterplot would show all these
+* We test the game playing with bounciness. we see that it has a detrimental effect to the analysis. we might get better ignoring it.
+* Selecting features based on the corelation with label is Feature Selection
+* if we dont have tools to prove the correlation (eg Python) we can run KNN for each feature and see the results (accuracy)
+
+### Lecture 32 - Objective Feature Picking
+
+* we mod runAnalysis()
+* we will fix k and select a column (feat)
+* we limit  range(0,3) so 0 1 2 to use it for column index. we will hardcode k
+* we extract feature column from data and label `const data = _.map(outputs,row=> [row[feature], _.last(row)]);`
+* we move tranitestsplit in analysis passing the new dataset `const [testSet, trainingSet] = splitDataset(minMax(data, 1), testSetSize);`
+* we also make knn param for label parametrical `testPoint => knn(trainingSet, _.initial(testPoint), k) === _.last(testPoint)` 
+
+### Lecture 33 - Evaluating Different Feature Values
+
+* we see that indeed drop position has the largest effect in KNN
+* the other 2 affect the result but cannot help us predict the result
+
+## Section 3 - Onwards to Tensorflow JS!
+
+### Lecture 34 - Let's Get our Bearings
+
 * 
