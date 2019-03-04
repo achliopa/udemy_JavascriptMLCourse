@@ -379,4 +379,55 @@ function minMax(data, featureCount) {
 
 ### Lecture 34 - Let's Get our Bearings
 
+* Key points from our very frugal into to ML:
+	* Features vs Labels
+	* Test vs Train sets of data
+	* Feature Normalization
+	* Common data structures (nested arrays)
+	* Feature Selection
+* Lodash:
+* Pros: 
+	* methods for just about everything we need
+	* Excellent API desing (e.g. .chain())
+	* Skills trasferable to other JS projects
+* Cons: 
+	* Extremely slow (relatively)
+	* Not 'numbers' focused
+	* Some things are awkward (getting columns of values)
+* Tesorflow JS:
+* Pros:
+	* Similar API to Lodash
+	Extremely Fast for numeric calcuilations
+	* Has a 'low-level' linear algebra API + higher level API for ML
+	* Similar API to numpy (popular Python numerical lib)
+* Cons: 
+	* still in active development
+
+### Lecture 35 - A Plan to Move Forward
+
+* Plan on tackling Tensorflow JS
+	* Learn some fundamentals around Tensorflow JS
+	* Go through a couple of exercises with Tensorflow
+	* Rebuild KNN algorithm using Tensorflow
+	* Build other algorithms with Tensorflow
+* Rembember that:
+	* The fastest way to learn ML is to master fundamental operations around working with Data
+	* Strong knowledge of data handling basics makes applying any algorithm trivial
+
+### Lecture 36 - Tensor Shape and Dimension
+
+* [Tensorflow JS Site](https://js.tensorflow.org/)
+* Tensorflow #1 Job when you begin ML is to make working with numbers in nested arrays really easy
+* The core unit in a Tensorflow program is the Tensor (A JS object that wraps a collection of numbers structured in arrays)
+* A Tensor in a program language agnostic definition is a multidimensional vector
+* A core property of Tensors is Dimensions (like normal arrays in any language or tables in linear algebra)
+* An easy way to tell the dimensions of a Tensor is to count the opening square braces
+* Linear Algebra knowledge is a MUST
+* Another core property of a Tensor is Shape: How many records (elements) in each dimension AKA size of array or Table (for JS remember .length on each dimension from outside in)
+* e.g [[5,10,17],[18,4,2].length=3].length=2 => Shape [2,3]
+* 2D is the most important dimension we will work with. for @D shape is [#rows, #columns]
+* shapes are always in brackets. even for 1d
+
+### Lecture 37  - Elementwise Operations
+
 * 
