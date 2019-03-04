@@ -208,4 +208,86 @@ function distance(pointA,pointB) {
 
 ### Lecture 19 - Gauging Accuracy
 
+* we assemble all pieces together in the runAnalysis function
+* we split the dataset keeping 10 rows as testSet `const [testSet, trainingSet] = splitDataset(outputs, 10);`
+* we do a for loop to run knn for each test datarow and we just console log result for now
+```
+	for (let i = 0; i < testSet.length; i++){
+		const bucket = knn(trainingSet,testSet[i][0]);
+		console.log(bucket);
+	}
+```
+* we test
+* we need to compare knn predictions to the test set actual bucket results. we cl them  `console.log(bucket, testSet[i][3]);` accuracy is poor 
+
+### Lecture 20 - Printing a Report
+
+* we just increase a counter at each correct prediction and we do a cl in the end as report
+```
+function runAnalysis() {
+	const testSetSize = 10;
+	const [testSet, trainingSet] = splitDataset(outputs, testSetSize);
+
+	let numberCorrect = 0;
+	for (let i = 0; i < testSet.length; i++){
+		const bucket = knn(trainingSet,testSet[i][0]);
+		if (bucket === testSet[i][3]){
+			numberCorrect++;
+		}
+```
+
+### Lecture 21 - Refactoring Accuracy Reporting
+
+* we refactor  runAnalysis using lodash and .chain()
+* we use filter to reduce the array keeping only corect predictions
+```
+	const accuracy _.chain(testSet)
+	 .filter(testPoint => knn(trainingSet, testPoint[0]) === testPoint[3])
+	 .size()
+	 .divide(testSetSize)
+	 .value()
+```
+
+### Lecture 22 - Investigating Optimal K Values
+
+* we will wrap ou runAnalisis testvcode in a for loop to test the results for different K vals
+* we use lodash .range() instead of for loop)
+* we also pass k as parameter at knn()
+* we test but we dont see a trend in results
+* we change test size to 50 and then to 100 also narrow or widen the k range
+* we run k up to 20 and testsize of 100 we also drop balls 1 every pixel and analyze.. we fall in accuracy
+
+### Lecture 23 - Updating KNN for Mutiple Features
+
+* we go to step 2 of our imporvement attempt by adding more feats to the analysis
+* we ll modify the algo for multiple variables
+* the only change to our algo is that we now havbe to find distance in multiple dimensions (features)
+* we will add 1 more feat (bounciness) so we will work in 2d space. distance will be ((x-x0)^2 + (y-y0)^2)^0.5
+
+### Lecture 24 - Multi-Dimensional KNN
+
+* in a 3d space the distance would be ((x-x0)^2 + (y-y0)^2 + (z-z0)^2)^0.5
+
+### Lecture 25 - N-Dimension Distance
+
+* we will use all 3 feats (droppoint, bounciness, ballsize)
+* we need to mod the distance method. we will make it able to work for N -dimensions, not just 3
+* distance will treat pointA and B as arrays of variable length
+* we use lodash and .chain()
+* we use .zip() join the 2 arrays as columns
+* we use .map to square the diff of 2 nums using array destructutring
+* ,sum() all 
+* get the value() and square it to 0.5
+```
+function distance(pointA,pointB) {
+	return _.chain(pointA)
+			.zip(pointB)
+			.map(([a,b])=> (a-b)**2)
+			.sum()
+			.value()**0.5;
+}
+```
+
+### Lecture 26 - Arbitrary Feature Spaces
+
 * 
