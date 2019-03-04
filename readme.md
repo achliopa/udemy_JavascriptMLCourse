@@ -290,4 +290,36 @@ function distance(pointA,pointB) {
 
 ### Lecture 26 - Arbitrary Feature Spaces
 
+* we mod knn() to be able to pas sin dimension arrays of feats
+* our label is always the last element. we use lodash .initial() to get n-1 first for feats and .last() to get last element
+* we dont use .pop() from vanilla JS or shift as they mod the array
+* we also use .initial() at point to get rid of label so that araays in distance match in length and zip() works
+* this creates a problem in the future when we will want to use the model to do predictions (we wont have a label in the pointso it will fail)
+```
+	 return _.chain(data)
+	  	.map(row => {
+	  		return [distance(_.initial(row), point), _.last(row)];
+	  	})
+```
+* so we should not use iniital(point) but manually clear out the array in the function call `.filter(testPoint => knn(trainingSet, _.initial(testPoint), k) === testPoint[3])`
+
+### Lecture 27 - Magnitude Offsets in Features
+
+* we retest for 10/10 dataset. now it takes a long time
+* if we plot the points in real scale we see that there is no actual variation in bounciness. so we wont get a good indication from this feat. same for ball size as distances are squared
+* this is solved with normalizing feats
+
+### Lecture 28 - Feature Normaization
+
+* we can normalize or standardize our data
+* normaization: divide by max val so that tange is 0-1
+* standarization: find the standard deviation and move the 0 of our range to this point
+* what i get in standarization is a normal distribution around 0 (bell curve)
+* for normalization we use MinMax method: Normalized DataSet = (FeatureVal - minOfFeatureVals)/(maxOfFeatureVals - minOfFeatureVals)
+* we apply normization one feat at a time
+* we test it in JSPlayground using lodash
+* Normalization dramaticaly improves KNN
+
+### Lecture 29 - Normalization with MinMax
+
 * 
