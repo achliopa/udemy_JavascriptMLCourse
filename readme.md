@@ -430,4 +430,22 @@ function minMax(data, featureCount) {
 
 ### Lecture 37  - Elementwise Operations
 
-* 
+* to access the tensorflow library in JSPlayground we use 'tf.'
+* to create a tensor instance we use `const data = tf.tensor([1,2,3])`
+* tensor comes pack with methods and properties like '.shape' `data.shape` gives [3]
+* we create a second tensor `const otherData = tf.tensor([4,5,6])` 
+* tensors support linear algebra mathematical operations like 
+	* elementwise addition `data.add(otherData)`
+	* elementwise subtraction `data.sub(otherData)` => [-3,-3,-3]
+	* elementwise multiplication `data.mul(otherData)` => [4,10,18]
+	* elementwise division `data.div(otherData)` => [0.25,0.4,0.5]
+* elementwise operations work on elements of same index and the resuilt is in same index  in a new tensor
+* elementwise operations can be comparative or logical
+* if we call `data` in still [1,2,3] do elementwoise operations do not mutate operands
+* for elementwise operations shapes have to match!!!
+* elementwise operations work for multidiventional tensors as well
+
+### Lecture 38 - Broadcasting Operations
+
+* sometimes we can do operations on tensors whose shapes don't match. for elementwise operations like add the  value of the smallest shape is broadcasted to do operatons with the other elements e.g [1,2,3] + [4] = [5,6,7]
+* Broadcasting works when taking the shape of  both tensors. from right to left the shapes are equal or one is 1
