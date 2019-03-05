@@ -470,4 +470,48 @@ function minMax(data, featureCount) {
 
 ### Lecture 41 - Creating Slices of Data
 
+* We can access multiple slices of data in a tensor. no need for lodash hacking
+* we add a sizable tensor
+```
+const data = tf.tensor([
+  [10,20,30],	
+  [40,50,60],	
+  [10,20,30],	
+  [40,50,60],	
+  [10,20,30],	
+  [40,50,60],		
+  [10,20,30],	
+  [40,50,60]
+]);
+```
+* if we want to extract center column we use .slice() passing in the starting index and the size. 
+* for our example start index is [0,1] 
+* size values are not 0 indexed they are 1 based (num of elements) 
+* for our example size is [8,1] : 8 rows 1 column `data.slice([0,1],[8,1])`
+* if we dont want to hardcode the row count we can use `data.shape[0]` 
+* data.shape is  an array
+* an other way is to use -1 meaning all `data.slice([0,1],[-1,1])` or starting index to the end
+
+### Lecture 42 - Tensor Concatenation
+
+* to join together tensors we use .concat()
+```
+const tensorA = tf.tensor([
+	[10,20,30],	
+  [40,50,60]
+]);
+const tensorB = tf.tensor([
+	[70,80,90],	
+  [100,110,120]
+]);
+tensorA.concat(tensorB);
+```
+* the result is [[10 , 20 , 30 ], [40 , 50 , 60 ], [70 , 80 , 90 ], [100, 110, 120]]  
+* concat by default works across the first dimension (row in our example) [2,3] concat [2,3] is [4,3]
+* if we want to concat along a specific dimension we have to spec the dimension index get it from shape) as second argument. so to concat along columns  `tensorA.concat(tensorB,1);` results in [[10, 20, 30, 70 , 80 , 90 ], [40, 50, 60, 100, 110, 120]] or shape [2,6]
+* so default is 0
+* the parameter is called axis of concatenation (Sounds like Python)
+
+### Lecture 43 - Summing Values Along an Axis
+
 * 
