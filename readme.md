@@ -514,4 +514,44 @@ tensorA.concat(tensorB);
 
 ### Lecture 43 - Summing Values Along an Axis
 
-* 
+* we showcase an example. we create 2 tensors
+```
+const jumpData = tf.tensor([
+	[70,70,70],
+  [70,70,70],	
+	[70,70,70],	
+	[70,70,70]
+]);
+
+const playerData = tf.tensor([
+	[1,170],
+  [2,170],	
+	[3,170],	
+	[4,170]
+]);
+```
+* first has jumps for a player . one player per row
+* we want to sum the jumps and concat the result on the player data tensor
+* calling `jumpData.sum()` sums all elements up. we dont want that
+* to sum along an axis we use `jumpData.sum(1)` as we want to sum along the column direction
+* we get [210, 210, 210, 210] so our result is transformed to 1D
+* we cannot directly concat to playerData. we need to reshape
+
+### Lecture 44 - Massaging Dimensions with ExpandDims
+
+* we need to trasform our sum to [[210],[210],[210],[210]] so from [4] to [4,1]
+* sum results in Dimension Reduction!!!!
+* concat needs identical dimensions
+* to Avoid Dimension Reduction and keep original dimensions in a sum we use a second argument `jumpData.sum(1,true)` 
+* now i can concat along the y axis (1) `jumpData.sum(1,true).concat(playerData,1)`
+* another way which is tensorflow standard of ading dimensions is  using .expandDims() 
+* expandDims accepts an axis on which the expand happens
+* expandDims(0) expands the dimensions of the tensor by 1 on the x axis  so [4] => [1,4]
+* expandDims(1) expands the dimensions of the tensor by 1 on the y axis  so [4] => [4,1]
+* for our example `jumpData.sum(1).expandDims(1).concat(playerData,1)` solves our puzzle
+
+## Section 4 - Applications of Tensorflow
+
+### Lecture 45 - KNN with Regression
+
+*  
