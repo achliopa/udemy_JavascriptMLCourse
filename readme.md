@@ -448,4 +448,26 @@ function minMax(data, featureCount) {
 ### Lecture 38 - Broadcasting Operations
 
 * sometimes we can do operations on tensors whose shapes don't match. for elementwise operations like add the  value of the smallest shape is broadcasted to do operatons with the other elements e.g [1,2,3] + [4] = [5,6,7]
-* Broadcasting works when taking the shape of  both tensors. from right to left the shapes are equal or one is 1
+* Broadcasting works when taking the shape of  both tensors. from right to left the shapes are equal or one is 1. if they are equal normal operation takes effect. if one has shape 1  in one dimension its value is 'broadcasted to other elements' so that operation can be performed e.g [[1,2,3],[4,5,6]] + [[1],[1]] === [[1,2,3],[4,5,6]] + [[1,1,1],[1,1,1]] = [[2,3,4],[5,6,7]]
+
+* broadcastin is alowed when there is no value in one shape. 
+* so last dimension size can match or 1, previous have to match , first can match or non-exist
+
+### Lecture 39 - Logging Tensor Data
+
+* Tensors are JS objects so we cannot just use console.log()
+* to see how they look like we use `data.print()` assuming data is a tensor object
+* we cannot use `console.log(data.print())`
+
+### Lecture 40 - Tensor Accessors 
+
+* accessors are used for debuging purposes not for actual programs
+* we make a tensor `const data = tf.tensor([10,20,30]);`
+* we can access specific element giving their index e.g `data.get(0)` returns 10
+* Tensors are NOT arrays. we cannot use data[0] for a multidimensional Tensor we add arguments in get(). 
+* get dimensions must match get argument count
+* there is no .set() method. we cannot set specific elements
+
+### Lecture 41 - Creating Slices of Data
+
+* 
