@@ -772,3 +772,56 @@ testFeatures.forEach((testPoint, index)=>{
 * we mod our loadCsv cofig `dataColumns: ['lat','long', 'sqft_lot'],`
 * knn is dimension agnostic so we rerun test. 
 * our results improve but are not optimal... we will do normalization
+* in visual code we can enable excel viewer to view csv data
+* surface varies much mush more than the location so it has a much larger contibution to knn
+* normalization or standarization? our surface vals have a normal distribution with some edge cases... no even distribution. so is a good candidate for standarization
+* standarization is not affected by edge cases that spoil our metrics
+
+### Lecture 56 - Numerical Standarization in Tensorflow
+
+* the formula of standarization is: (Value - Average)/StandardDeviation
+* standarization is applied per column
+* we use 'tf.moments()' an inbuilt method passing the tesnor to calculate it on. this method returns an object which among other contains 'mean' AKA average and 'variance'.
+* variance is very closely related sto stdDev as stdDev = sqrt(variance)
+* tf.moments() works dimilarly to sum. it needs an axis. other wise it works on all datapoints
+* an example of doing standarization on a sample array using tf
+```
+const numbers = tf.tensor([
+	[1,2],
+	[3,4],
+	[5,6]
+]);
+const {mean, variance } = tf.moments(numbers,0)
+numbers.sub(mean).div(variance.pow(.5))
+```
+
+### Lecture 57 - Applying Standarization
+
+* we will add standarization in knn()
+* we get the mean and varianve aof all used feats in knn `const {mean, variance } = tf.moments(features,0);`
+* we apply standarization in predictionPoint `const scaledPrediction = predictionPoint.sub(mean).div(variance.pow(.5))`
+* also we start our knn chain by standardizing feats
+* also we need to pass our prediction point as tensor....
+* our results are still off
+
+### Lecture 58 - Debugging Calculations
+
+* we will use node debugger and chrome debugging tools
+* we run `node --inspect-brk index.js` and open chrome broweser
+* we navigate to 'chrome://inspect'
+* we see the remote process (index.js). we click inspect and see odevtools debugger
+* we place a breakpoint in knn() and run code
+* we console log features (shape and print) and look oc. we look at our scaled prediction
+* it looks ok (close to 0)
+* we cp code in console chaining .print() and look at iteration to spot abnormal vals
+
+### Lecture 59 - What Now?
+
+* to improve our algo we can do other steps like check different k vals . or ad dmore feats to the analyzis
+* we add 'sqft_living' to feats. imrpovement is much better
+
+## Section 5 - Getting Started with Gradient Descent
+
+### Lecture 60 - Linear Regression
+
+* 
