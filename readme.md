@@ -577,4 +577,43 @@ const playerData = tf.tensor([
 
 ### Lecture 47 - KNN with Tensorflow
 
+* we test in JSPlaygrounds
+* we set a fkae data set as tensors
+```
+const features = tf.tensor([
+	[-121, 47],
+  	[-121.2, 46.5],
+	[-122, 46.4],
+	[-120.9, 46.7]
+]);
+
+
+const labels = tf.tensor([
+	[200],
+    [250],
+	[215],
+	[240]
+]);
+```
+* index of tensors matters as it maps feats to label
+* we pass in a prediction point as tensor `const predictionPoint = tf.tensor([-121,46]);`
+* we will write KNN in tensorflow.... using barebones linear algebra not bult in algos
+* our KNN is 2D so we have 2D distance calc
+* first we find distance from pred point (in 1d) using sub() and broadcasting `features.sub(predictionPoint)`
+* the we need to square the diffs (square each eleemnt) using '.pow(2)' on the tensor (we use chaining)
+* then we need to sum on the y axis. so we chain `.sum(1)`
+* then we need to get the root 2  we chain `.pow(0.5)`
+
+### Lecture 48 - Maintaining Order Relationships
+
+* our next step is to sort the results (distances) from lower to greatest.
+* shuffling the feats tensor breaks our index link to the labels tensor
+* also tensors cannot be sorted
+* to solve indexing we concat features wit labels
+* first we need to solve dimensioning issue as duming reduces dimenstios
+* we fix features dimensioning making it [4,1] with `	.expandDims(1)`
+* then we concat along y axis labels `.concat(labels,1)`
+
+### Lecture 49 - Sorting Tensors
+
 * 
