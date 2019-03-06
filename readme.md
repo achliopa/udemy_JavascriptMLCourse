@@ -554,4 +554,27 @@ const playerData = tf.tensor([
 
 ### Lecture 45 - KNN with Regression
 
-*  
+*  Steps to Follow:
+	* Apply a slightly different KNN algorithm in the browser with Tensorflow JS and fake data
+	* Move KNN algorithm to our code editor with real data and run in NodeJS environment
+	* Do some optimization
+* OUr next example will have to do with house prices
+* we will have alist of properties with their location and price
+* THe main difference from previous problem in the type of problem
+	* drop ball. which bucket? => discrete label => classification
+	* location + feats. price of house? linear label => regression
+* Our current approach of KNN Algo
+	* Find distance between features and prediction point
+	* Sort from lowest point to greatest
+	* Take the top K records
+	* Average the label value of those top K records
+
+### Lecture 46 - A Change in Data Structure
+
+* our data will be fake dataset of 2 feats: longitute + latitude. the label will be a house price
+* in the current approach we will split the dataset in features and labels (Python SKlearn style). so we will have 2 tensors
+* the rational is that we will do tensorwide operations
+
+### Lecture 47 - KNN with Tensorflow
+
+* 
