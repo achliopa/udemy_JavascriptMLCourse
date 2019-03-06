@@ -616,4 +616,83 @@ const labels = tf.tensor([
 
 ### Lecture 49 - Sorting Tensors
 
+* to sort we will use tensor method 'unstack()' which splits the tensor into an array of tensors along the specified axis
+* then we can sort using JS
+* chaining '.unstack()' splits the tensor into an array of tensor along the x axis (rows). so 1 tensor per row.
+* we can access the each row tensor giving the row index `.unstack()[i]`
+* all JS arrays come with the sort() method inbuilt
+* e.g. 
+```
+const letters = ['b','a','d','c'];
+letters.sort() // ['a', 'b', 'c' 'd']
+```
+* JS cannot sort tensors or even objects. No error. no result
+* we need to pass in sort() a callback to tell it how to sort
+* the callback gets 2 arguments say (a, b) these can be any array element do the comparizon and return 1 or -1 
+	* 1 means a > b
+	* -1 means b > a
+* e.g
+```
+const distances = [
+	{ value: 20},
+	{ value: 30},
+	{ value: 5},
+	{ value: 10},
+];
+
+distances.sort((a,b) => {
+	return a.value > b.value ? 1 : -1;
+});
+```
+* for our problem we can access the 1st element of each tensor with its index and .get() so `.get(0)`.
+* our sorting method that we chain becomes
+```
+	.sort((a,b)=>{
+		return a.get(0) > b.get(0) ? 1 : -1;
+	})
+```
+
+### Lecture 50 - Averaging Top Values
+
+* to take the top k records we use '.slice()'
+* note that after using unstack() in our chain we work with vanilla JS arrays so we use vanilla JS array slice().
+* it uses a start point and the num of elements `.slice(0,k)`
+* to get the average we sum vals together and use '.reduce()' to do it
+* JS arrat reduce takes in a callback with 2 args. the  accumulator and the array element. after the callback it takes the accumulators init val. it iterates through the array moding the sum at our will
+* to get the average val
+```
+.reduce((acc,tensor)=>{
+  	return acc + tensor.get(1);
+	},0)/k
+```
+* remember the hoyse val isa t index 1
+* our tensorflow based custom KNN complete
+```
+features
+  .sub(predictionPoint)
+  .pow(2)
+	.sum(1)
+	.pow(.5)
+	.expandDims(1)
+	.concat(labels,1)
+	.unstack()
+	.sort((a,b)=>{
+		return a.get(0) > b.get(0) ? 1 : -1;
+	})
+	.slice(0,k)
+	.reduce((acc,tensor)=>{
+  	return acc + tensor.get(1);
+	},0)/k
+```
+
+### Lecture 51 - Moving to the Editor
+
+* we go to /MLKits/knn-tf folder
+* our code goes to index.js
+* we also have a csv with real housing data + column titles 
+* we also have a 'load_csv.js' a JS file to load the csv data
+* 'pacakge.json' has all the libs in. we just have to 'npm install'
+
+### Lecture 52 - Loading CSV Data
+
 * 
