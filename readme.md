@@ -824,4 +824,12 @@ numbers.sub(mean).div(variance.pow(.5))
 
 ### Lecture 60 - Linear Regression
 
+* Linear Regression Pros:
+	* Its Fast. Only train once then use it for any prediction
+	* Uses methods that will be very important in more complicated ML
+* Linear Regression Cons:
+	* Lot harder to understant with just intuition
+
+### Lecture 61 - Why Linear Regression?
+
 * 
