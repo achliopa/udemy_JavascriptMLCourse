@@ -695,4 +695,80 @@ features
 
 ### Lecture 52 - Loading CSV Data
 
-* 
+* we start writing our index.js file
+* first we import tensorflow
+```
+require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs');
+```
+* thje first import tells tf how to do the calculations. using the GPU or the CPU
+* our import will try to do clacs on the cpu (for gpu use `require('@tensorflow/tfjs-node-gpu');`)
+* the second import is our actual import  we can use in our program
+* next we import the loadCSV js file `const loadCSV = require('./load-csv');`
+* we call loadCSV to read the file. we pass in the csv file name and a config object that contains:
+	* a suffle option (useful in ML)
+	* a splitTest setting the record count for test
+	* a 'dataColumns' to import in our dataset for our analysis
+	* a 'labelColumns'
+* we do destructuring to get the attributes of interest out of the generated object
+```
+let { features, labels, testFeatures, testLabels } = loadCSV('kc_house_data.csv', {
+	shuffle: true,
+	splitTest: 10,
+	dataColumns: ['lat','long'],
+	labelColumns: ['price']
+});
+```
+* we cl to test code correctness
+* we see that the tfjs build uses only generic CPU feats not harnessing our specific CPU feats that could boost performance
+* we gan compile Tesorflow if we want on our CPU to boost performance
+
+### Lecture 53 - Running an Analysis
+
+* we cp all knn tf code from textbook in a tnn() function
+* knn's signature is `function knn(features, labels, predictionPoint, k){}`
+* we want to test the method. but all our sample data are plain arrays we have to turn them to tensors first
+```
+features = tf.tensor(features);
+labels = tf.tensor(labels);
+testFeatures = tf.tensor(testFeatures);
+testLabels = tf.tensor(testLabels);
+```
+* we call our method for a testpoint and print our prediction
+```
+const result = knn(features,labels,testFeatures.slice([0,0],[1,-1]),10);
+console.log(`Guess: ${result} Actual: ${testLabels.get(0,0)}`);
+```
+* our prediction is of as we take int oaccount only the location
+
+### Lecture 54 - Reporting Error Percentages
+
+* we will calucalte and report the error
+* error = ((expected value) - (predicted value)) / (expected value)
+* `error = (testLabels.get(0,0) - result) / testLabels.get(0,0);`
+* we decide to work with testdata as arrays to iterate through testset printing the eror
+```
+features = tf.tensor(features);
+labels = tf.tensor(labels);
+
+const result = knn(features,labels,tf.tensor(testFeatures[0]),10);
+const error = (testLabels[0][0]- result) / testLabels[0][0];
+console.log(`Guess: ${result} Actual: ${testLabels[0][0]}`);
+console.log(`Error: ${error * 100 }%`);
+```
+* we loop through the whole testSet with forEach()
+```
+testFeatures.forEach((testPoint, index)=>{
+	const result = knn(features,labels,tf.tensor(testPoint),10);
+	const error = (testLabels[index][0]- result) / testLabels[index][0];
+	console.log(`Guess: ${result} Actual: ${testLabels[index][0]} Error: ${error * 100 }%`);
+});
+```
+* we are almost consantly guesing below the actual
+
+### Lecture 55 - Normalization or Standardization
+
+* we need to include other feats, like size
+* we mod our loadCsv cofig `dataColumns: ['lat','long', 'sqft_lot'],`
+* knn is dimension agnostic so we rerun test. 
+* our results improve but are not optimal... we will do normalization
