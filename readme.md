@@ -947,4 +947,53 @@ numbers.sub(mean).div(variance.pow(.5))
 
 ### Lecture 72 - Project Overview
 
-* we go to /MLKits
+* we go to /MLKits/regression and run `npm install`
+* the files in the directory is a csv with its loader js code
+* what we want is to find the relationship between milles per gallon (dependent feature) and horsepower (independent feature)
+* 'Miles Per Gallon = a * (Car Horsepower) + b'
+* What we will implement.
+* A JS `class LinearRegression{}` with:
+	* `gradientDescent()` : run one iteration of GD and update 'a' and 'b'
+	* `train()` : Run GD until we get good values for 'a' and 'b'
+	* `test()` : Use a 'test' data set to evaluate the accuracy o9f our calculated 'a' and 'b' 
+	* predict() : Make a prediction using our calculated 'a' and 'b'
+
+### Lecture 73 - Data Loading
+
+* we add a file 'index.js' for app code and a 'linear-regression.js' for the algorithm code (reusable)
+* we add tensorflow to index.js and the load-csv file
+```
+require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs');
+const loadCSV = require('./load-csv');
+```
+* we use loadCSV to get in array form the csv file columns of interest
+```
+let {features, labels, testFeatures, testLabels } =   loadCSV('./cars.csv',{
+	shuffle: true,
+	splitTest: 50,
+	dataColumns: ['horsepower'],
+	labelColumns: ['mpg']
+});
+```
+
+### Lecture 74 - Default ALgorithm Options
+
+* we add the 'linear-regression.js' file
+* we import tf `const tf = require('@tensorflow/tfjs');`
+* we define and export an empty LR class
+```
+class LinearRegression {
+
+}
+
+module.exports = LinearRegression;
+```
+* we add a constructor initializing the class instance `constructor(features, labels, options)` we assume that feats and labels are tensors and options a config object
+* we add default options for the Algo
+* we use Object.assign to copy an object to an empty object with some default params `this.options = Object.assign({ learningRate: 0.1 }, options);`
+* Object.assign() is a good trick to have in mind
+
+### Lecture 75 - Formulating the Training Loop
+
+* 
