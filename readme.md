@@ -832,4 +832,45 @@ numbers.sub(mean).div(variance.pow(.5))
 
 ### Lecture 61 - Why Linear Regression?
 
-* 
+* with linear regression we try to find an equation that relates some inidmepte variable with a dependent variable
+* a good way to understand it is linear fit. finding a line that passes among the datapoints and correlates 2 vars. the better correlated the vals the best the fit
+* it works for multiple independent vars (features) 
+* the equvalent is a multiple dimensional plot (abstract) where the fit is not a line but a n-1 dimensional plane
+
+
+### Lecture 62 - Understanding Linear Regression
+
+* There are many methods of solving linear regression problems
+	* Ordinary Least Squares
+	* Generalized Least Squares
+	* ...
+	* Gradient Descent
+
+* we will use Gradient Descent. It is used in Deep Learning for imrpoving the results 
+* We try tfind the mathematical relation between sqft lot size (x) and price (y)
+* we do a first guess of y = 0x+1. we plot it and see that the distance of the datapoints and the line is big.
+* for the computer to understand how bad its guess is it uses a way to calculate error . in our case Mean Squared Error (MSE) = 1/n Σi=1->n (Guess[i] - Actual[i])^2 where n is the number of datarows or samples
+* The computer repeats running MSE for a new guess tr. then compares the value with previous one
+* the fact is that a nd b in our equation will be the best possible for the lowest MSE
+
+### Lecture 63 - Guessing Coefficients with MSE
+
+* one approach is to focus on one coefficient at a time, plotting (MSE,b) on a chart.
+* it will have an U shape where the lowest point is our best guess for the coefficient b
+* this is not the best approach because:
+	* we dont know the possible rqnge of b
+	* we dont know a step size for incrementing b
+	* huge computational demands when adding in more features 
+* gradient descent works with derivatives and slope. (rememeber Bolzano theorem)
+
+### Lecture 64 - Observations Around MSE
+
+* we know that 'b' vs MSE chart always looks likea parabolic curve 'U' shaped
+* when we get bad guesses the slope is steep. as we get better tjhe slope decreases
+* 'The steepness of line tells us how far we are. the'
+* 'The direction of the slope tell us if optimal b less or more the currect guess'
+* SO what we care is the rte of change , the slope or derivative of MSE
+
+### Lecture 65 - Derivatives!
+
+* the derivative of an equation gives a new equation that tells us the slope or rate at any location
