@@ -874,3 +874,30 @@ numbers.sub(mean).div(variance.pow(.5))
 ### Lecture 65 - Derivatives!
 
 * the derivative of an equation gives a new equation that tells us the slope or rate at any location
+* for an 1 feat 1 label plot (2d) the MSA is a power 2 function. slope is a linear equation. we need just 2 points (guesses) to plot it and find where it crosses 0 so we can find with just 2 guesses where MSE is the least
+
+### Lecture 66 - Gradient Descent in Action
+
+* the derivative of MSE (assuming a coefficient of y=ax+b is 0) is:
+	* MSE = 1/n Σi=1->n (Guess[i] - Actual[i])^2 
+	* d(MSE)/db = 2/n Σi=1->n (b - Actual[i]) 
+* Gradient Descent calculation (for only 1 coefficient):
+	* Pick a value of 'b'
+	* Calculate the slope of MSE with b
+	* Is the slope very very small? if yes terminate
+	* Multiple the slope by any arbitrary small value calleda 'learning rate'
+	* Subtract that from 'b'
+	* REPEAT from step 2
+* Smaller learning rate => slower lagortihm => better results
+* GDE slows down as we approach the best MSE when it finds it it stops
+
+### Lecture 67 - Quick Breather and Review
+
+* we want to find an equation that relates an independent variable and a dependent variable => House Price = a * (Sqft Lot) + b
+* we can guess at bvalues of 'b', then use MSE to figure out how wrong we were
+* the slope, or rate of change of MSE can be used to figure out whether our 'b' value was too high or low
+* take a slope of MSE at 'b' using the derivative of MSE equation
+* subtract the slope from 'b' to update the guess
+* REPEAT from step 3
+
+### Lecture 68 - Why a Learning Rate
