@@ -991,9 +991,72 @@ module.exports = LinearRegression;
 ```
 * we add a constructor initializing the class instance `constructor(features, labels, options)` we assume that feats and labels are tensors and options a config object
 * we add default options for the Algo
-* we use Object.assign to copy an object to an empty object with some default params `this.options = Object.assign({ learningRate: 0.1 }, options);`
+* we use Object.assign to copy an object to an empty object with some default params for the algo`this.options = Object.assign({ learningRate: 0.1, iterations: 1000 }, options);`
 * Object.assign() is a good trick to have in mind
+* iterations refers to max iterations (if not defined otherwise)
 
 ### Lecture 75 - Formulating the Training Loop
+
+* we add a train() method to class for our training loop
+```
+	train() {
+		for (let i = 0; i < this.options.iterations; i++) {
+			this.gradientDescent()
+		}
+	}
+```
+
+### Lecture 76 - Initial Gradient Descent Implementation
+
+* we will flesh out 'gradientDescent()'
+* our first GD implementation will be working but slow (plain arrays)
+* after we will replace it with a much faster more lean implem but more cryptic (fancy tf code)
+* in constructor we set locals  a, b to 0
+* in gradientDescent() we implement the slope equations.
+* a * x + b is our guess so we will first calculate it for all data rows and then us it in the equation to make them easier. we use map to iterate throught the dataset and make a new array of guesses
+```
+		const currentGuessesForMPG = this.features.map(row => {
+			return this.a * row[0] + this.b;
+		});
+```
+
+### Lecture 77 - Calculating MSE Slopes
+
+* we start by the b MSE derivative using map and lodash
+```
+		const bSlope = _.sum(currentGuessesForMPG.map((guess, i) => {
+			return guess - this.labels[i][0];
+		}))*2/this.labels.length;
+```
+* in same fashion we implement MSE derivative for a 
+```
+		const aSlope = _.sum(currentGuessesForMPG.map((guess, i) => {
+			return -1*this.features[i][0]*(this.labels[i][0] -guess);
+		}))*2/this.labels.length;
+```
+
+### Lecture 78 - Updating COefficients
+
+* we need to use slopes to update the a and b vals after multiplyinmg them with learning rate
+```
+		this.a -= (aSlope * this.options.learningRate);
+		this.b -= (bSlope * this.options.learningRate);
+```
+* we save and require in index the linearRegression class `const LinearRegression = require('./linear-regression');
+`
+
+### Lecture 79 - Interpreting Results
+
+* we create a new instanc eof the class doing one run
+```const regression = new LinearRegression(features, labels, { 
+	learningRate: 0.001,
+	iterations: 1
+});
+```
+* we call `regression.train();` and in train we cl the a and b `console.log(`a: ${regression.a} b: ${regression.b}`);`
+* we run 100 iterations values are way way off. our learning rate is off. we are overshooting we lower lr 0.0001 values are still off.
+* now is the point where we should normalize our dataset to try to improve
+
+### Lecture 80 - Matrix Multiplication
 
 * 
