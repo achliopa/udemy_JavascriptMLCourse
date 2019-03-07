@@ -901,3 +901,50 @@ numbers.sub(mean).div(variance.pow(.5))
 * REPEAT from step 3
 
 ### Lecture 68 - Why a Learning Rate
+
+* we will answere the following questions
+	* why the learning rate
+	* why use derivatives? why dont compute MSE twice and compare (brute force)
+	* why not set derivative equal to 0 and solve for b to find minimum MSE
+* learning rate controls the rate of convergence
+* we adjust b based on slope and learning rate.
+* in the initial slope we care about its sign. otherwise its pure intuition. we can use any number.
+* vonvergence starts fast and slows as we go to the min. magnitude of initial slope is something we dont care at all. to point it out we start with the sign of iniital slope and replace it with a arbitrary number. it converges at the same rate and at the same point givent the same learning rate
+* using learning rate and not fixed steps prevents overshoot.
+* optimal learning rate is problem dependent
+* plotting MSE vs b as we do the convergence shows the rate. (common in Python)
+
+### Lecture 69 -  Answering Common Questions
+
+* we use derivatives for GDE to save compute cycles
+* solving for 0 (finding the vertex point) wont work when we enter multiple coefficients (like a and b) as we will have mulitple unknowns
+
+### Lecture 70 - Gradient Descent with Multiple Terms
+
+* we ll revice the GD algo to be able to find a and b that give minimum MSE.
+* our reviced equations are:
+	* MSE = 1/n Σi=1->n ((a * x[i] + b) - Actual[i])^2 
+	* b partial MSE derivative d(MSE)/db = 2/n Σi=1->n ((a * x[i] + b) - Actual[i])
+	* a partial MSE derivative d(MSE)/da = 2/n Σi=1->n ( -x[i](Actual - (a * x[i] + b))
+* in essence we solve the lienar equation to a and b and use it in our MSE
+* THe Mulitterm GD algorthm will be:
+	* Pick a value for 'b' and 'a'
+	* Calculate the slope of MSE with respect to 'a' and 'b'
+	* Are both slopes small enough? if so quit
+	* Multiply both slopes by learning rate
+	* Subtract results from 'b' and 'a'
+	* Repeat from step 2
+
+### Lecture 71 - Multiple Terms in Action
+
+* as a start point we choose a and b = 0 calculate slopes and iterate with learing rate of 0.01.
+* this lr creates a big overshoot. we decrease
+* we see that our nonscaled feats create a problem in convergence
+* so when doing GD always to normalization or standarization before
+* in real life lr is not a broblem as we can iterate as many times as appropriate
+
+## Section 6 - Gradient Descent with Tensorflow
+
+### Lecture 72 - Project Overview
+
+* we go to /MLKits
