@@ -1059,4 +1059,36 @@ module.exports = LinearRegression;
 
 ### Lecture 80 - Matrix Multiplication
 
-* 
+* matrices can be expressed as tensors
+* Considerations on Matrix Multiplication:
+	* Are matrices eligible to be multiplied together?
+	* Whats the output of matrix multiplication?
+	* how we multiply matrices?
+* a matrix is a tensor with 2 dimensions
+* inner shapes must be the same e.g [4,2] x [2,3] = [4,3]
+* we cannot swap the order in matrix multiplication . the result is not the same
+
+### Lecture 81 - More on Matrix Multiplication
+
+* the shape of the output is the shape of the outer shapes of the two multipliers e.g [4,2] x [2,3] = [4,3]
+* matrix multipkication is done row by column summing the multiplied elements
+* the first column of the resulting matrix has elements that are multiplications of all rows of 1st multiplicant with 1 column of second
+* [[1,2],[3,4]] x [[1,2],[3,4]] = [[1x1+2x3,3x1+4x3],[1x2+2x4,3x2+4x4]]
+
+### Lecture 82 - Matrix form of Slope Equations
+
+* we will take advantage of matrix multiplication to calculate the slope with respact to a and b. 
+* the new equation is: (Features * ((Features * Weights) - Labels)) where
+	* Labels: Tensor of label data
+	* Features: Tensor of our feature data
+	* n: Number of observations
+	* Weights: A and B in a tensor
+
+### Lecture 83 - Simplification with matrix Multiplication
+
+* to get the guess with tensors and multiplications
+	* we convert our indepenetent variables (features) to tensor and multiply it with a tensor that contains the weights
+	* to use matric multiplication we need to make them compatible shape as now feats is [n,1] and weights [2,1] to solve it we expnd feats adding a column of 1 to the rights so that multiplication gives ax+b1 = ax+b
+* the result will be [n,1] containing the guesses
+
+### Lecture 84 - How it All Works Together
