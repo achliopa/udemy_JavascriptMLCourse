@@ -18,5 +18,4 @@ const regression = new LinearRegression(features, labels, {
 });
 
 regression.train();
-
-console.log(`a: ${regression.a} b: ${regression.b}`);
+regression.test(testFeatures, testLabels);

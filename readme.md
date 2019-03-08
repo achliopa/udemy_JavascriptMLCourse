@@ -1105,4 +1105,117 @@ module.exports = LinearRegression;
 
 ### Lecture 85 - Refactoring the Linear Regression Class
 
+* We will refactor the LinearRegression class to use matrix multiplication and tensors
+* Refactoring Approach
+	* Refactor constructor to make 'features' and 'labels' into tensors
+	* Append a column of one's to the feature tensor
+	* Make a tensor for our weights as well
+	* Refactor 'gradientDescent()' method to use the new equation (MatrixMult + transpose of feats)
+* usually column of 1s is appended on the left . the result is the weight in their matrix are reversed [a,b]
+* 1st step is straightforeward
+```
+		this.features = tf.tensor(features);
+		this.labels = tf.tensor(labels);
+```
+* for 2nd step we need to generate a conlumn of 1 and concat it to the feat tensor
+* genrating tables of ones or zeroes in tf is easy `tf.ones([6,1])`
+* we use concat in chain mode along the y axis 
+* we also have to be aware that concat return a new tensor `this.features = tf.onex([this.features.shape[0],1]).concat(this.features,1);`
+
+### Lecture 86 - Refactoring to One Equation
+
+* Step 3. we make a tensor out of initial weights to store our calculated weights as we move along . again we use tf `const weights = tf.zeros([2,1]);`
+* Step 4. we reimplement gradient descent method
+* mtarixMultiplication in tf is done with 'tf.matMul()'
+* transpose in tf is easy '.transpose()' operating on tensors
+* we dont care about the 2 factor in original slope equations. its just a factor. learning rate is much more crucial factor than that
+
+### Lecture 87 - A Few More Changes
+
+* the last part og GR method is to recalclulate the weights taking into acount slope and lr `this.weights.sub(slopes.mul(this.options.learningRate));`
+* our gd method complete
+```
+	gradientDescent() {
+		const currentGuesses = this.features.matMul(this.weights);
+		const differences = currentGuesses.sub(labels);
+
+		const slopes = this.features
+			.transpose()
+			.matMul(differences)
+			.div(this.features.shape[0]);
+
+		this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
+	}
+```
+* remember that tensors are Immutable. we need to assigne our operations to new or existing ones
+* our approach is a Vectorized solution
+* we printout our weights  in index.js `console.log(`a: ${regression.weights.get(1,0)} b: ${regression.weights.get(0,0)}`);` and test
+
+### Lecture 88 - Same Results? or Not?
+
+* we see that our results are much better than when we where working with arrays. omitting the 2 improves the result
+
+### Lecture 89 - Calculating Model Accuracy
+
+* To calculate the Model Accuracy
+	* Train the Model with training data (we already do it)
+	* Use 'test' data to make predictions about observations with known labels
+	* Gauge accuracy by calculating coefficient of determination
+* Coefficient of Determination: R^2 = 1 - (SSres/SStot)
+	* SSres: (Sum of Squares of Residuals) = Σi=1->n (Actual - Predicted)^2
+	* SStot: (Total Sum of Squares) = Σi=1->n (Actual - Average)^2
+* R2 of 1 means perfect fit, <0 means we are way off
+* Predicted val is our prediction, Average is the average or mean of all actuals
+* Total Sum of Squares is the sum ofd the distance of actual values from the average or mean (strain line). is the worst case possible. we have to be neteter than this
+* Sum of squares of residuals  is the sum ofd the distance of actual values from our prediction (a line made up of the calculated weights)
+
+* negative R2 means SStot is better than SSres. our prediction is below average
+
+
+### Lecture 90 - Implementing Coefficient of Determination
+
+* we will implement a new method 'test()' that accepts test feats and labels so that it can extract accuracy metrics
+* basically we do massaging of the test data like we did for train data in constructor
+* we also use the weights we got from trianing to build our prediction array for the test set
+```
+	test(testFeatures, testLabels) {
+		testFeatures = tf.tensor(testFeatures); 
+		testLabels = tf.tensor(testLabels);
+
+
+		testFeatures = tf
+			.ones([testFeatures.shape[0],1])
+			.concat(testFeatures,1);
+
+		const predictions = testFeatures.matMul(this.weights);
+```
+* we add a print of our ptrediction tensors and we call it in index.js `regression.test(testFeatures, testLabels);`
+* the predictions seem reasonable
+
+### Lecture 91 - Dealing with Bad Accuracey
+
+* we go on to calculate the R2
+* calculating SSres with tf is easy
+```
+		const res = testLabels
+			.sub(predictions)
+			.pow(2)
+			.sum()
+			.get();
+```
+* sum() sums all and .get() extract the single val out of tensor
+* we need to calculate the average for tot. we use .means()
+* we calculate SStot
+```
+		const tot = testLabels
+			.sub(testLabels.mean())
+			.pow(2)
+			.sum()
+			.get();
+```
+* we return r2 `return 1 - (res/tot);`
+* we test and r2 is off (-3)
+
+### Lecture 92 - Reminder on Standarization
+
 * 
