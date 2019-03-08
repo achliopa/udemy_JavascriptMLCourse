@@ -1218,4 +1218,140 @@ module.exports = LinearRegression;
 
 ### Lecture 92 - Reminder on Standarization
 
+* our dataset is a standarization candidate
+* we ll use tf.moments to extract mean and variance
+* if we do standarization on training set we have to apply the same mean and variance on the test set so that results are relevant
+* standarization will be a preprocessing feat we can apply on both in a separate method
+
+### Lecture 93 - Data Processing in a Helper Method
+
+* we will add processFeatures() method to be used by contructor() and test(). it will return scaled (by the same factor) and 1s appended feats ready for the processing
+* we start by putting in only the existing preprocessing
+```
+	processFeatures(features) {
+		features = tf.tensor(features);
+		features = tf
+			.ones([features.shape[0],1])
+			.concat(features,1);
+
+		return features;
+	}
+```
+* we use it in both test and constructor
+
+### Lecture 94 - Reapplying Standarization
+
+* in preprocessing we need to calculate the mean and variance first time and then reuse them on next calls
+* we need to distinguish if its going to be the first call or second
+* we add a new helper to extract the metrics and store them as object attributes to be used in preprocessing. it also returns them for immediate use
+```
+	standardize(features) {
+		const { mean, variance } = tf.moments(features,0);
+		this.mean = mean;
+		this.variance = variance;
+
+		return features.sub(mean).div(variance.pow(0));
+	}
+```
+* in preocessFeatures we decide what to do based on the mean and variance status
+```
+		if(this.mean && this.variance) {
+			features = features.sub(this.mean).div(this.variance.pow(0));
+		} else {
+			features = this.standardize(features);
+		}
+```
+
+### Lecture 95 - Fixing Standarization Issues
+
+* we get worse results. we suspect standarization issues. we print our features. after standarizationm in index.js
+* we see that we standardized our ones prepended column as well which is now -1....
+we need to fix this
+* we apply concat ones after standarization
+* we fix the issue but r2 is bad
+* we apply the standarization teqnique on a [10,1] tensor of ones in browes (JSPlayground) it is 1 not -0.9999 we got in node.js
+* tensorflow delegates calculations to the underlying mechanism. in browser is webGL...
+
+### Lecture 96 - MassagingLearning Rates
+* our goal is to improve R2. we play with LearnignRate
+* we play and wsse that 0.5 to 1 gives 0.61 so its the best we can get
+* we need to start adding features...
+
+### Lecture 97 - Moving Towards Multivariate Regression
+
+* our new Predicition equations will be MPG = b + a1 * Feat1 + a2 * Feat2 + ... + an * Featn
+* so its same just more weights
+* y = b+ax (Univariate Linear Regression)
+* y = b+a1x1+a2x2+...+anxn (Multivariate Linear Regression)
+* Feats * Weights is same (matMul)
+* Labels emain same
+* transpose works the same
+
+### Lecture 98 - Refactoring for Multivariate Analysis
+
+* we just have to fix our weights initialization `this.weights = tf.zeros([this.features.shape[1],1]);`
+* we load more columns out of csv `dataColumns: ['horsepower','weight','displacement'],` 
+* we test and we are way off. we reduce lr we play with iteration
+* we need to automate lr searching
+
+### Lecture 99 - Learning Rate Optimization
+
+* big LR can create overshoot.
+* there are Learning Rate Optimization Methods available
+	* Adam
+	* Adagrad
+	* RMSProp
+	* Momentum
+* they adjust the LR to find the best one
+* We will build a Custom Learning Rate Optimizer
+	* With every iteration of GD, calculate the exact value of MSE and store it
+	* After running an iteration of GD, look at the current MSE and the old MSE
+	* if the MSE iwent 'up' then we did a bad update, so divide learning rate by 2
+	* if the MSE went 'down' we are in the right direction. increase LR by 5%
+
+### Lecture 100 - Recording MSE History
+
+* or vector based solution used the combined slope method
+* we need to go back to the MSE equation
+* the MSE vectorized form is MSE = sum(((Features * Weights) -Labels)^2)/n
+* we impelment it in a new method pushing the mse to a local history array
+```
+	recordMSE() {
+		const mse = this.features
+			.matMul(this.weights)
+			.sub(this.labels)
+			.pow(2)
+			.sum()
+			.div(this.features.shape[0])
+			.get();
+
+		this.mseHistory.push(mse);
+	}
+```
+* we call the method in train() after each GD iteration
+* in test we dont update weights
+
+### Lecture 101 - Updating Learning Rate
+
+* we implement 3 last stpes of our custom algo in an updateLearningRate method
+* to avoif looking for the last values to compare instead of push() we use unshift to the array to put the new vals in the beginning of the array
+```
+	updateLearningRate() {
+		if (this.mseHistory.length < 2) {
+			return;
+		}
+
+		if(this.mseHistory[0] > this.mseHistory[1]) {
+			this.options.learningRate /= 2;
+		} else {
+			this.options.learningRate *= 1.05;
+		}
+	}
+```
+* we call updateLR after storing the mse in the train iteration
+
+## Section 8 - Plotting Datas with Javascript
+
+### Lecture 102 - Observing Changing Learning Rate and MSE
+
 * 
