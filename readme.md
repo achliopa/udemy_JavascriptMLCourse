@@ -1092,3 +1092,17 @@ module.exports = LinearRegression;
 * the result will be [n,1] containing the guesses
 
 ### Lecture 84 - How it All Works Together
+
+* to cobine the 2 slope equations in one we have to find a way to combine the sumation content in botha as the rest is uniform
+* in previous lecture we calculated the difference (guess)
+* now we have to multiply it with the features which after expansion is a [6,2] tesnor
+* guesses (weights) is [6,1] so they are not eligible for multiplication
+* the trick is to transpose one matrix (feats) so it becomes [2,6]
+* transposing and doing matrix multiplication of 1 row with 1 column does in essesnce also the summation as we get x1d1+x2d2+...+xndn and d1_d2+d3+..+dn. this is the summation of the 2 slopes.
+* Being able to manipulate matrix multiplication is crucial for handling multi-feature ML techniques
+
+## Section 7 - Increasing Performance with Vectorized Solutions
+
+### Lecture 85 - Refactoring the Linear Regression Class
+
+* 
