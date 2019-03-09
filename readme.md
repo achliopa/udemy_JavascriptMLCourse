@@ -1354,4 +1354,10 @@ we need to fix this
 
 ### Lecture 102 - Observing Changing Learning Rate and MSE
 
+* we put a LR of 10. we see that with the LR custom optimizer we get convergence
+* we cl  lr in each iteration
+* we cl MSE and see the best we  get is 17.98
+
+### Lecture 103 - Plotting MSE values
+
 * 
