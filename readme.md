@@ -1483,4 +1483,49 @@ regression.predict([
 
 ### Lecture 111 - Introduction Logistic Regression
 
-* 
+* Logistic Regression predicts discrete values (classification)
+* the most basic form is Binary Classification ( only 2 categories in label)
+
+### Lecture 112 - Logistic Regression in Action
+
+* very similar to linear regression
+* our problem is simple  (only 1 feat, 1 label): Given a person's age, do they prefer to read books or watch movies
+* 1 feature (linear), 1 label (binary)
+* the problem boils down in finding a math relationship (a formula) that relates a person's age to whether they like to read books or watch movies
+* again it will look like: Preference = a * Age + b. prefernece has to be a binary value like 0 or 1
+* so in classification problem swe encode (binary) or hot encode (in multiclass) the label classes into binary
+
+### Lecture 113 - Bad Equation Fits
+
+* linear equation with w eights gives linear vals. an approach would be to round the val to 0 or 1. vals below 0 or over 1 are bad. they have no eaning
+* y=ax+b will go beyond the limits
+
+### Lecture 114 - The Sigmoid Equation
+
+* Sigmoid or σ() is 1/(1+e^x) gives vals between 0 and 1 in an s shape centered around z=0
+* we can replace x witht he guess. y = ax+b
+* if we pass the linear regression guess y = .57 * Age -11.1 into sigmod (1/(1+e^-y) it performs well and is binary
+
+### Lecture 115 - Decision Boundaries
+
+* sigmoid is not a step function. it has a gradual shift from 0 to 1. so we need a threshold. οor decision boundary. a common decision boundary is 0.5
+
+### Lecture 116 - Changes for Logistic Regression
+
+* The Logistic Regression Gradient Descent (Binary):
+	* Encode label values as either 0 or 1
+	* Guess a starting value of B and A (A1, A2 ...)
+	* Calculate SLope of MSE using all (or batches) of observations in feature set and current A?B vals
+	* Multiply slope with learning rate
+	* Update A and B
+	* Repeat from step 3
+
+### Lecture 117 - Project Setup for Logistic Regression
+
+* our problem for testing the algo has same dataset as before: Given a vehicles weight, horsepower and engine displacement will it PASS or FAIL a smog emissions check
+* its a binary classification problem
+* we ll refactor the project struct as we will use same loadcsv and data creating 3 subflders: /logistic-regression, /linear-regression and /data
+
+### Lecture 119 - Importing Vehicle Data
+
+*  
