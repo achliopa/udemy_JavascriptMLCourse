@@ -32,6 +32,7 @@ class LinearRegression {
 
 	train() {
 		for (let i = 0; i < this.options.iterations; i++) {
+			
 			this.gradientDescent();
 			this.recordMSE();
 			this.updateLearningRate();

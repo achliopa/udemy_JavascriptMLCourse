@@ -1360,4 +1360,34 @@ we need to fix this
 
 ### Lecture 103 - Plotting MSE values
 
+* we will use the 'node-remote-plot' library for plotting which we have already installed `const plot = require('node-remote-plot');`
+* after training and geting the accuracy metrics we use the lib to create aplot as a png file in our folder 'plot.png'
+```
+plot({
+	x: regression.mseHistory.reverse(),
+	xLabel: 'Iteration #',
+	yLabel: 'Mean Square Error'
+});
+```
+* the method accepts a cofig object with plot params
+
+### Lecture 104 - Plotting MSE History against B Values
+
+* in linear regression class we add one more array called bHistory
+* it will record how b changes over iterations
+* we add an elelement in each training iteration `this.bHistory.push(this.weights.get(0,0));`
+* we set it as xaxis in the plot
+```
+plot({
+	x: regression.bHistory,
+	y: regression.mseHistory.reverse(),
+	xLabel: 'Value of B',
+	yLabel: 'Mean Square Error'
+});
+```
+
+## Section 9 - Gradient Descent Alterations
+
+### Lecture 105 - Batch and Stochastic Gradient Descent
+
 * 
