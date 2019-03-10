@@ -15,7 +15,8 @@ let {features, labels, testFeatures, testLabels } =   loadCSV('./cars.csv',{
 
 const regression = new LinearRegression(features, labels, { 
 	learningRate: .1,
-	iterations: 100
+	iterations: 3,
+	batchSize: 10
 });
 
 regression.train();
@@ -26,3 +27,7 @@ plot({
 	xLabel: 'Iteration #',
 	yLabel: 'Mean Square Error'
 });
+
+regression.predict([
+	[120,2,380]
+]).print();

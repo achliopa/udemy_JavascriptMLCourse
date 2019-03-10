@@ -1390,4 +1390,97 @@ plot({
 
 ### Lecture 105 - Batch and Stochastic Gradient Descent
 
+* our GD algorithm is not optimized.
+* The current GD algorithm flow is:
+	* Guess a starting value of B and A (A1, A2, A3 ..)
+	* calculate slope of MSE using all observations in feature set and current A?B vals
+	* Multiply the slope with Learning Rate
+	* Update A and B
+* for each iteration we use all observations (train  data)
+* In Batches Gradient Descent the improvemtn will be to use a portion of the observation in each iteration (batches)
+* we gain in speed
+* In Stochastic Gradient Descent (SGD) we use one random observation in each iteration
+
+### Lecture 106 - Refactoring towards BatchGradient Descent
+
+* all code we have so far holds for both variations (matMul) only the dimensions change
+* the mod for batch gradient descent is that now train() method will get the feats and labels split them in batches and feed them to gradientDescent() method for each iteration
+
+### Lecture 107 - Determining Batch Size and Quantity
+
+* we mod train()
+* we need to define batch size. we add it in options object
+```
+const regression = new LinearRegression(features, labels, { 
+	learningRate: .1,
+	iterations: 100,
+	batchSize: 10
+});
+```
+* in ttrain() we calculate the num of batches. division is not always event. we round down `const batchQuantity = this.features.shape[0] / this.options.batchSize;`
+
+### Lecture 108 - Iterating Over Batches
+
+* in iterations we add a for loop for each back. in there we put gradientDescent as we want to feed data in batches. 
+* we use tensor slice to split the dataset in batches
+* we call GD with the batches
+```
+train() {
+		const batchQuantity = Math.floor(
+			this.features.shape[0] / this.options.batchSize
+		);
+		for (let i = 0; i < this.options.iterations; i++) {
+			for(let j=0;j < batchQuantity; j++){
+				const startIndex = j * this.options.batchSize;
+				const { batchSize } = this.options;
+
+				const featureSlice = this.features.slice(
+					[startIndex, 0],
+					[batchSize,-1]
+				);
+
+				const labelSlice = this.labels.slice(
+					[startIndex, 0],
+					[batchSize,-1]
+				);
+
+				this.gradientDescent(featureSlice,labelSlice);
+			}
+			this.recordMSE();
+			this.updateLearningRate();
+		}
+	}
+```
+
+### Lecture  109 - Evaluating Batch Gradient Descent Results
+
+* BGD is about performance (especially in big datasets)
+* aloso the plot shows we converge faster
+* we can decrease the iterations even 3 are enough
+* to do SGD (stochastic) we set batchsize to 1 (dataset is shuffled so its random)
+* R2 decreases.
+
+### Lecture 110 - Making Predictions with the Model
+
+* to make the model useful we need to be able to do predictions
+* we add a method called predict. we want to be able to insert muptliple rows of features and get predictions for each
+* we just have to calculate the guess using linear equation of weigths
+* we standardize vals and do matMul with weights
+```
+	predict(observations){
+		return this.processFeatures(observations).matMul(this.weights);
+	}
+```
+* we do our predictions in index.js
+* order of feats matter it has to match loadCSV order
+```
+regression.predict([
+	[120,2,380]
+]).print();
+```
+
+## Section 10 - Natural Binary Classification
+
+### Lecture 111 - Introduction Logistic Regression
+
 * 
