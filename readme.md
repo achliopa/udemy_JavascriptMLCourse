@@ -1965,6 +1965,37 @@ debugger;
 * So retained is the total memory used by an object inclusding all its references. shallow is the mem used without the references
 * as long as a reference exists GB collector does not free up memory
 
-### Lecture 158 - Measuring Memory Usage
+### Lecture 159 - Measuring Memory Usage
 
-* 
+* we will inspect the logistic regression program for places when we  can free up memory  by removing references that are not necessary
+* we put 'debugger;' statements then fire up inspector and take me snapshots to see the mem usage pfr optimization oprtunities
+* we put a breakpoint after inner for loop in train();
+* this is the middle of the program so its a good place to see if we have dangling unnececary data around
+* we max out mem size and fire up inpector going for 60000 samples
+* we take a snapshot. mem usage is huge
+* largest consumers are mnistData, features and encodedLabels
+* mnistdata values ans labels consume half the memory. they are the data we got from the dataset and used them to extract feats and labels.. they are not needed
+* it would be nice to delete them somehow and free the memory
+
+### Lecture 160 - Releasing References
+
+* the way to do it is to wrap the  code in a function. return what we want to use 
+* when method returns all init data memory will free
+```
+function loadData() {
+	const mnistData = mnist.training(0,60000);
+
+	const features = mnistData.images.values.map(image => _.flatMap(image));
+	const encodedLabels = mnistData.labels.values.map(label => {
+		const row = new Array(10).fill(0);
+		row[label] = 1
+		return row;
+	});
+
+	return { features, labels: encodedLabels };
+}
+
+const { features, labels } = loadData();
+```
+* we can do the same for test data also
+
