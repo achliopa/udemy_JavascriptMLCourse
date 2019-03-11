@@ -1920,4 +1920,51 @@ console.log('Accuracy is',accuracy);
 
 ### Lecture 155 - Minimizing Memory Usage
 
+* we add a 'memory.js' file in our folder to test memory optimization
+* we use lodash to fill a superlarge array with arange of nums and launch our debugger
+```
+const _ = require('lodash');
+
+const loadData = () => {
+	const randoms = _.range(0,999999);
+
+	return randoms;
+};
+
+const data = loadData();
+
+debugger;
+```
+* we run `node --inspect-brk memory.js` an use the chrome inspector. we run to the brekapoint and go to Meomry tab => take heap snapshot
+* we look into the snapshot
+* we see the objects and the memory used
+
+### Lecture 156 - Creating Memory Snapshots
+
+* we sort by shallow size.
+* array takes up 64% of node heap and its size is 9.4MB
+* if we expand on array we see the actual array takes 8MB but there are other elements that take up heap memory
+* in retainers tab we see the data object and we expand on it
+* we take screenshot. close the inspector and go back to memory.js to make a change
+* we comment return statement. we expect data to be undefined. we repeat the drill with inspector to take snapshot of mmem. array takes up 1.2MB of mem
+
+### Lecture 157 - The Javascript Garbage Collector
+
+* we saw that when we dont return the array mem goes down.
+* the difference between 2 snapshots is than in the second as we dont return the array out of the method. garbage collector kicked in and reclaimed the memory as the method is done
+* when we assign an object or array to a var we are creating a mem refernce
+* as long as the variable is in use the Garbage collector is not going to clean the memory
+* in the program memory is allocated when the program is in loadData() method
+
+### Lecture 158 - Shallow vs Retained Memory Usage
+
+* in the mem tab of inbector we have to columns for size: Shallow and Retained. Retained is larger than Shallow (usually)
+* our array has almost equal shallow and retained size
+* the object Array in the constructor list has a shallow size of 32bythes and retained of 8MB
+* Array is an instance of class Array. internaly the Array has a data property with reference to the (array) the actual data. the (array) is sitting somewhere in the COmputer memory
+* So retained is the total memory used by an object inclusding all its references. shallow is the mem used without the references
+* as long as a reference exists GB collector does not free up memory
+
+### Lecture 158 - Measuring Memory Usage
+
 * 
