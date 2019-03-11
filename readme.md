@@ -1697,4 +1697,96 @@ plot({
 
 ### Lecture 136 - A Problem to Test Multinominal Classification
 
+* the problem will be. given the horsepower, weight and displacement of a vehicle. will it have high medium or low fuel efficiency?
+* we dont have such a able column. we will make it by applying thresholding to mpg column to produce these 3 classes before we run LG. the rule we will apply is
+	* 0-15mpg => Low
+	* 15-30mpg=> Medium
+	* 30+ mpg => High
+
+### Lecture 137 - Classifying Continuous Values
+
+* in index.js we will do the preprocessing  and hotencoding in the converters attribute of the loadCSV config obj
+```
+
+let {features, labels, testFeatures, testLabels } =   loadCSV('../data/cars.csv',{
+	shuffle: true,
+	splitTest: 50,
+	converters: {
+		mpg: (value) => {
+			const mpg = parseFloat(value);
+			if(mpg <15) {
+				return[1,0,0];
+			} else if (mpg < 30) {
+				return [0,1,0];
+			} else {
+				return [0,0,1];
+			}
+		}
+	},
+	dataColumns: ['horsepower','displacement','weight'],
+	labelColumns: ['mpg']
+});
+```
+
+### Lecture 138 - Training a Multinominal Model
+
+* we need to add lodash .flatMap() on labels to remove one level of brackets
+* we check weiths tensor and its ok
+* we make a prediction totest the algo for multinominal `regression.predict([[215,440,2.16]]).print();` and get [1,0,0] which is low and its correct
+
+### Lecture 139 - Marginal vs Conditional Probability
+
+* to do multinominal thresholding ad get  aprediction we need to choose the element  with the highest probabilty among predicted labels
+* we run a prediction that returns [1,1,0] as both low and med get >0.5 probabiltiy
+* sigmoid gives the probailtiy of being 1 label and in our case its done for each label class column in isolation. this is a Marginal Prop Distribution
+* Marginal Probability Distribution: Considers one possible cas in isolation
+* Conditional Probability Distribution: Considers all possible output cases together
+* the result of Marginal Prop Distribution is to get a total probability of > 1
+* Contitional Prop Distr gives a total of 1 prob in multinominal class propblems
+
+### Lecture 140 - Sigmoid Vs Softmax
+
+* In a nutshell: 
+	* Sigmoid=> Marginal Prop Distr => Binary Clasification
+	* Softmax=> Conditional Prop Distr => Multinominal Clasification
+* Softmax Equation: Probability of being the 1 label rather than the 0 label
+	* (e^(ax+b))/Σk=0->K(e^(ax+b))
+
+### Lecture 141 - Refactoring Sigmoid to Softmax
+
+* we replace sigmoid() with softmax()
+
+### Lecture 142 - Implementing Accuracy Gauges
+
+* to apply a trheshold for the array of labels we use argMax returns the column index with highest probability. we will apply it to equal and predictions to get the difference and have an metric
+
+### Lecture 143 - Calculating Accuracy
+
+* decision boundary and greater() is useless . we replace it with `.argax(1)` specing the axis it will operate (y)
+* we add it in predict and test
+```
+  predict(observations) {
+    return this.processFeatures(observations)
+      .matMul(this.weights)
+      .softmax()
+      .argMax(1);
+  }
+
+  test(testFeatures, testLabels) {
+    const predictions = this.predict(testFeatures);
+    testLabels = tf.tensor(testLabels).argMax(1);
+
+    const incorrect = predictions
+      .notEqual(testLabels)
+      .sum()
+      .get();
+
+    return (predictions.shape[0] - incorrect) / predictions.shape[0];
+  }
+```
+
+## Section 12 - Image Recognition In Action
+
+### Lecture 144 - Handwriting Recognition
+
 * 
