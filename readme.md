@@ -1999,3 +1999,8 @@ const { features, labels } = loadData();
 ```
 * we can do the same for test data also
 
+### Lecture 161 - Measuring Footprint Reduction
+
+* we run again the  program with inspection and take a snapsot of mem. size is halved
+
+### Lecture 162 - Optimization Tensorflow Memory Usage
