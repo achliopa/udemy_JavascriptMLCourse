@@ -1528,4 +1528,144 @@ regression.predict([
 
 ### Lecture 119 - Importing Vehicle Data
 
-*  
+* we implement same csv loading code like lienar regression in index.js
+
+### Lecture 120 - Encoding Label Class Values
+
+* the only difference from loadCSV for linear regression is that we add one more attribute to config object. 'converters' that does the converion from labels to numbers for the algorithm
+```
+	converters: {
+		passedemissions: (value) => {
+			return value === 'TRUE' ? 1 : 0;
+		}
+	},
+```
+
+### Lecture 121 - Updating Linear Regression for Logistic Regression
+
+* we cp the whole code from LinearRegression class and rename in LogisticREgression
+* we need to do small mods for the conversion to classification (logreg) basicallly add sigmoid and threshold
+* in classification problems we use Cross Entropy instead of MSE or R2 to get a metric of how bad we guessed
+* Cross Entropy: -(1/n)Σi=0->n(Actual * log(Guess) + (1-Actual) * log(1-Guess))
+	* Actual: Encoded label val
+	* Guess: sigmoid(ax+b)
+	* n: number of observations
+* Slope of Cross Entropy with Respect to A and B in vectorized form: Features.T * (sigmoid(Features * Weights) -Labels)/n
+	* Labels: Tensor of our label data
+	* Features: Tensor of feature data
+	* n: num of observations
+	* Weights: A and B in a tensor
+
+### Lecture 122 - The Sigmoid Equation with Logistic Regression
+
+* tensorflow has sigmoid inbuilt. '.sigmoid()' it works on a tensor and we can chain it
+
+### Lecture 123 - A Touch More Refactoring
+
+* in gradientDescent() we chain sigmoid after our ax+b guess `const currentGuesses = features.matMul(this.weights).sigmoid();` 
+* we do the same in predict() where we do a guess
+* in linear regression test() we were calculating R2 val. in classification it makes no sense
+* we instantiate LogisticRegression in index.js
+```
+const regression = new LogisticRegression(features,labels, {
+	learningRate: 0.5,
+	iterations: 100,
+	batchSize: 50
+});
+
+regression.train();
+```
+* we do a prediction as we canot test with R2.
+```
+regression.predict([
+	[130, 307,1.75]
+]).print();
+```
+* we get 0.23 so we need to do thresholding but is is a fail
+
+### Lecture 124 - Gauging Classification Accuracy
+
+* in test() we will change our accuacy metrics calculation. we will use test labels with know labels run the model get the probabilities and threshold them to get the predictions
+* we will subtract the predictions from the real labels to get the fifferences. if difference is a 0 its a match if its !=0 its not a match
+* we will abs() them and sum them to get a metric which will be how far we are from perfect match
+
+### Lecture 125 - Implementing a Test Function
+
+* the full test method
+```
+	test(testFeatures, testLabels) {
+		const predictions = this.predict(testFeatures).round();
+		testLabels = tf.tensor(testLabels);
+
+		const incorrect = predictions.sub(testLabels).abs().sum().get();
+
+		return (predictions.shape[0] - incorrect) /predictions.shape[0];
+	}
+```
+* we call test in index ` console.log(`Accuracy ${regression.test(testFeatures, testLabels )*100}%`); `
+
+### Lecture 126 -  Decision Boundaries
+
+* we replace round() so that we can put a threshold !=0.5 
+* we pass it as option to the class
+* applying thresh to tf is easy '.greater(0.65)' in our case `.greater(this.options.decisionBoundary);`
+* greater() returns booleans which cann ot be used for our accuracy calc
+* we need to chain a `.cast('float32');` to fix that
+
+### Lecture 127 - Mean Squared Error vs Cross Entropy
+
+* in linear-regression we use MSE history to optimize learning rate.
+* in logistic regression is not used but we still use it for learnign rate.
+* it is useful as MSE is still used for the guess before the sigmoid. so it still has effect on  prediction. MSE is not moving  on parabola due to the sigmoid but it has a waved shape with global minimum.
+* so we need to mod our learning rate optimizer to use cross entropy
+
+### Lecture 128 - Refactoring with Cross Entropy
+
+* we refactor recordMSE()  to use cross entropy instead
+* we use vectorized way of calculating Cross Entropy (Cost): -(1/m) * (Actual^T * log(Guesses) + (1 - Actual)^T * log(1-Guesses))  ^T means matrix transpose
+* in tf we transpoise with `.transpose()` we calc log with `.log()`
+* we can do nested tf operations
+```
+	recordCost() {
+		const guesses = this.features
+			.matMul(this.weights)
+			.sigmoid();
+
+		const termOne = this.labels
+			.transpose()
+			matMul(guesses.log());
+
+		const termTwo = this.labels
+			.mul(-1)
+			.add(1)
+			.transpose(
+				guesses
+					.mul(-1)
+					.add(1)
+					.log()
+			);
+
+		const cost = termOne.add(termTwo)
+			.divide(this.features.shape[0])
+			.mul(-1)
+			.get(0,0);
+
+		this.costHistory.unshift(cost);
+	}
+```
+
+### Lecture 130 - Plotting Changing Cost history
+
+* we import plot in index.js and add aplot
+```
+plot({
+	x: regression.costHistory.reverse()
+});
+```
+* we play with batch sze to see conversion
+
+## Section 11 - Multi-Value Classification
+
+### Lecture 131 - Multinominal Logistic Regression
+
+* 
