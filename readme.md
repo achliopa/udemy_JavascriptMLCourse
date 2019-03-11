@@ -1668,4 +1668,33 @@ plot({
 
 ### Lecture 131 - Multinominal Logistic Regression
 
+* Multinominal = Multiple Classification Options = Multiple Classes in label Column
+
+### Lecture 132 - A Smart Refactor to Multinominal Analysis
+
+* A simple problem to showcase the Smart Refactor: given a persons age do they prefer movies, books or dance
+* The Smart Way is Hot Encoding. 1 column  per LABEL CLASS (BINARY aka true or false)
+* the result is a probabilty per label (lice sigmoid before thresholiding)
+
+### Lecture 133 - A Smarter Refactor
+
+* we start with Hot Encoding of labels
+* then we do logistic regression for each hot encoded label class
+* features is same. weights and labels tensors only difer for each endoced class regression
+* manage a separate instance for each value is a pain. can we just use one class instance?
+
+### Lecture 134 - A Single Instance Approach
+
+* add a dimension? put them in an array?
+* the best way is to concat weights and hot encoded label tensors in one tensor addin one dimension. (y axis)
+* our codebase needs refactoring but matMul works in any dimension (we mod 3nd multiplicant external dimension from 1 to say n) so matMul works
+
+### Lecture 135 - Refactoring to Multi-Column Weights
+
+* we add a new folder. a cp of logistic regression naming it multinominal-logistic-regressionvp 
+* we mod the weights to add one more dim
+* hot encoding is done in preprocessing (loadCSV so we assum labels is a [n,3] tensor) `this.weights = tf.zeros([this.features.shape[1], this.labels.shape[1]]);`
+
+### Lecture 136 - A Problem to Test Multinominal Classification
+
 * 
