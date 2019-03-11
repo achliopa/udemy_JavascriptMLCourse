@@ -1789,4 +1789,135 @@ let {features, labels, testFeatures, testLabels } =   loadCSV('../data/cars.csv'
 
 ### Lecture 144 - Handwriting Recognition
 
+* We will see the famous K-MNIST dataset problem : Given a pixel intensity in an image, identify whether the character is a handwritten 0,1,2,3,4,5,6,7,8 or 9
+* KMNIST has 60k training images and 20k test images
+* its a classical multinominal classsification problem
+
+### Lecture 145 - Grayscale Values
+
+* he wants to apply logistic regression to solve it... WTF????
+* image is a 2d array of a val (for grayscale) that 0->255 or 0. to 1.
+* MNIST is 28x28
+
+### Lecture 146 - Many Features
+
+* a solution to apply LR is to flattent the image into a 1d array of 784 feat columns considering a pixel ad datapoint.
+
+### Lecture 147 - Flattening Image Data
+
+* we have a npm package called 'mnist-data' to conveniently load the mnist dataset
+* in /multinominal-logistic-regression folder  in index.js we import it `const mnist = require('mnist-data');`
+* mnist contains a lot of methods. we use .training passing the range to get the 1st training image `const mnistData = mnist.training(0,1);`
+* we cl it and get
+```
+{ images: 
+   { magic_number: 2051,
+     total_num_items: 60000,
+     rows: 28,
+     cols: 28,
+     values: [ [Array] ],
+     start: 0,
+     end: 1 },
+  labels: 
+   { magic_number: 2049,
+     total_num_items: 60000,
+     values: [ 5 ],
+     start: 0,
+     end: 1 } }
+
+```
+* its an object, in images.values prop we have a nested array with the pixel values of the retrieved images. we also get in labels.values an array witht he labels
+* vals are 0-255
+* we want to flaten it out so we use lodash flatMap and vanilla JS map to iterate thought the top level array `const features = mnistData.image.values.map(image => _.flatMap(image))`
+* we loaad 10 images and get featrures its a 2d array
+
+### Lecture 148 - Encoding Label Values
+
+* we need to get lables from mnist and hot encode them mnist label vals give us the index in the label array
+```
+const encodedLabels = mnistData.labels.values.map(label => {
+	const row = new Array(10).fill(0);
+	row[label] = 1
+	return row;
+});
+```
+
+### Lecture 149 - Implementing an Accuracy Gauge
+
+* we create an algo instance and train it
+```
+const regression = new LogisticRegression(features,encodedLabels,{
+	learningRate: 1,
+	iterations: 5,
+	batchSize: 100
+});
+regression.train();
+```
+* we get some testing data from the mnist using .testing() method `const testMnistData = mnist.testing(0,100);` its an object with same struct like trainind data
+* so we do the same to extract the dat asin a meaningful way
+```
+const testMnistData = mnist.testing(0,100);
+const testFeatures = testMnistData.images.values.map(image => _.flatMap(image));
+const testEncodedLabels = testMnistData.labels.values.map(label => {
+	const row = new Array(10).fill(0);
+	row[label] = 1
+	return row;
+});
+
+const accuracy = regression.test(testFeatures, testEncodedLabels);
+console.log('Accuracy is',accuracy);
+```
+* our results are awful
+
+### Lecture 150 - Unchanging Accuracy
+
+* whatever params we tweak. accuracy is 8% fixed
+
+### Lecture 151 - Debugging the Calculation Process
+
+* we run our debugger with `node --inspect-brk index.js` and go to chrome://inspect
+* we add a breakpoint to train() call go down to gradientDescent and cl all my vars
+* when we cl this.features we see NaNs
+* something is off with standarization probably as flattening is ok
+* we rerun and put debugger breakpoint in processFeatrures()
+* with debuggin we find that in the standarization process 'standardize()' the issue is produced by `return features.sub(mean).div(variance.pow(0.5));` where it does division with 0 returning NaN
+
+### Lecture 152 - Dealing with Zero Variances
+
+* We got 2 possible solutions to our situation
+	* Remove the columns with only zeros from our feature set - the dont provide any benefit
+	* Change our method of standarization/normalization to better acount for possible all zero vals
+* We chose the 2nd option. 1st option is difficult to implement with tf
+* note that in browser the code runs because tf uses webGL that deals with such issues
+* what we will do is replace variance of zero with 1
+* the trick to do it is `variance.add(variacne.cast('bool').logicalNot().cast('float32'))` is like xoring and masking. adding a 1 only if variance is 0
+
+### Lecture 153 - Backfilling Variance
+
+* we fix standardize function
+```
+  standardize(features) {
+    const { mean, variance } = tf.moments(features, 0);
+
+    const filler = variance.cast('bool').logicalNot().cast('float32');
+
+    this.mean = mean;
+    this.variance = variance.add(filler);
+
+    return features.sub(mean).div(this.variance.pow(0.5));
+  }
+```
+* our accuracy is 0.88
+
+## Section 13 - Performance Optimization
+
+### Lecture 154 - Handing Large Datasets
+
+* we run the analysis for 60000 samples and it crashes. node runs out of memory
+* node heap memory gets 1.8GB of Mem
+* an easy fix is to allocate more meory to the task `node --max-old-space-size=4096 index.js` and allocate  4GB to the task
+* we gat some warnings.. but it finishes with 0.91 accuracy
+
+### Lecture 155 - Minimizing Memory Usage
+
 * 
