@@ -2004,3 +2004,73 @@ const { features, labels } = loadData();
 * we run again the  program with inspection and take a snapsot of mem. size is halved
 
 ### Lecture 162 - Optimization Tensorflow Memory Usage
+
+* we put the 'debugger;' breakpoint after the 'regression.train();'
+* we launch inspector to see how much memory is consumed by tensorflow
+
+### Lecture 163 - Tensorflow's Eager Memory Usage 
+
+* we see that we have 40000 tensor objects
+* tensorflow library keeps a reference to every single tensor created and every array in the tensor
+* so every tensor we create sits in memory eternally unless we manually clean it up
+* every tensorflow operation creates a tensor that sits arround
+* if we run `tf.ENV.registry.webgl.backend.texData.data` we see the tensor count at that moment
+
+### Lecture 164 - Clean up Tensors with Tidy
+
+* the way to clean up space of tensors is to wrap the tensor creation code with `tf.tidy()` like
+```
+tf.tidy(()=>{
+	tf.tensor()
+	...
+});
+```
+* every tensor created in tidy will get deleted once the tidy executes. if we want to retain a tensor after tidy callback ends we need to return it
+
+### Lecture 165 - Implementing TF Tidy
+
+* we will use TF Tidy in our Logistic Regression class
+* we really have to undestand the code to make use of tidy in the right places
+* we make heavy use of tensors in the gradientDescent() method
+```
+  gradientDescent(features, labels) {
+   this.weights = tf.tidy(()=>{
+     const currentGuesses = features.matMul(this.weights).softmax();
+    const differences = currentGuesses.sub(labels);
+
+    const slopes = features
+      .transpose()
+      .matMul(differences)
+      .div(features.shape[0]);
+
+    return this.weights.sub(slopes.mul(this.options.learningRate));
+   });
+  }
+```
+
+### Lecture 166 - Tidying the Training Loop
+
+* the most heavy use of tensors is in train() iterations as we do slices for batching. these slices are used one time and then should be discarded. but they are retained
+* we are interested only in the weights so we can use tidy to reclaim space of transient tensors
+```
+        this.weights = tf.tidy(()=>{
+          const featureSlice = this.features.slice(
+            [startIndex, 0],
+            [batchSize, -1]
+          );
+          const labelSlice = this.labels.slice([startIndex, 0], [batchSize, -1]);
+
+          return this.gradientDescent(featureSlice, labelSlice);
+        });
+```
+* we debug with inspector. we sse that tensor memory use is reduced
+* memory use is reduced dramativcally
+
+### Lecture 168 - One More Optimization
+
+* in cost calculation we calculate term one and two and then calculate the cost
+* we can use cost and remove term one and two with tf.tidy
+
+### Lecture 170 - Plotting Cost History
+
+* 
