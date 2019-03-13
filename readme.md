@@ -2099,3 +2099,119 @@ plot({
 ### Lecture 175 - Loading CSV Files
 
 * we add a folder called loadcsv
+* we start npm `npm init`
+* we install 2 packages lodash and shuffle-seed `npm install --save lodash shuffle-seed`
+* we add a 'load-csv.js' file
+
+### Lecture 176 - A Test Dataset
+
+* we add a 'data.csv' with test data
+* first line are the column titles `passed,id,height,value`
+* data are
+```
+TRUE,0,10,20
+FALSE,1,11,21
+TRUE,2,12,22
+```
+
+### Lecture 177 - Reading Files from Disk
+
+* we add a method 'loadCSV(filename,options){}' passing in the filename and an options object
+* we import fs to read from disk `const fs = require('fs');`
+* weopen a data stream from file with `const data = fs.readFileSync(filename, {encoding: 'utf-8'});`
+* this is a synchronous method and we pass finame and file data encoding to use
+* we cl and run the file. we get the file outputed in the screen
+
+### Lecture 178 - Splitting into Columns
+
+* we will split the data string by new line character `data.split('\n')`
+* we use map to iterate through the array of row strings and get column fields `data.split('\n').map(row=>row.split(','))`
+* we get an array of arrays.
+* we need to trip empty columns (,,,,)
+
+### Lecture 179 - Dropping Trailing Columns
+
+* we drop using lodhas dropRightWhile() `data = data.map(row=>_.dropRightWhile(row, val => val===''));`
+
+### Lecture 180 - Parsing Number Values
+
+* we need a reference to the headers (first row)
+* we extract them with `const headers = _.first(data);`
+* we parse the numbers into floats
+```
+data = data.map((row, index) => {
+		if (index === 0){
+			return row;
+		}
+
+		return row.map((element, index) => {
+			const result = parseFloat(element);
+			return _.isNaN(result) ? element : result;
+		});
+	});
+```
+
+### Lecture 181 - Custom Value Parsing
+
+* user will use the convertes option to spec the column title and a custom callbackl to becalled for each element for data parsing. its meant to be used as 
+```
+loadCSV('data.csv', {
+	converters: {
+		passed: val => val === 'TRUE' ? true : false
+	}
+});
+```
+* in the mapping we use it as 
+```
+		return row.map((element, index) => {
+			if (converters[headers[index]]) {
+				const converted = converters[headers[index]](element);
+				return _.isNaN(converted) ? element : converted;
+			}
+
+			const result = parseFloat(element);
+			return _.isNaN(result) ? element : result;
+		});
+```
+* using iobject attribute string interpolation
+
+### Lecture 182 - Extracting Data Columns
+
+* we make sure we can return columns on demand
+* in our options object we spec which ones are our data Columns and which the  label Columns
+```
+loadCSV('data.csv', {
+	dataColumns: ['height', 'value'],
+	labelColumns: ['passed'],
+	converters: {
+		passed: val => val === 'TRUE' ? true : false
+	}
+});
+```
+* we implement the actual extraction in a new method passing in the data and the columnNames
+* we get the index and we map throuuth the data geting out eleements at index speced
+```
+function extractColumns(data, columnNames) {
+	const headers = _.first(data);
+
+	const indexes = _.map(columnNames, column => headers.indexOf(column));
+	const extracted = _.map(data, row => _.pullAt(row, indexes));
+
+	return extracted;
+}
+
+```
+* in loadCsv we get data with extractors
+```
+	let labels = extractColumns(data, labelColumns);
+	data = extractColumns(data,dataColumns);
+```
+* we remove headers
+```
+	data.shift();
+	labels.shift();
+```
+
+### Lecture 183 - Shuffling Data via Seed Phrase
+
+* 
