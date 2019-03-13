@@ -2073,4 +2073,29 @@ tf.tidy(()=>{
 
 ### Lecture 170 - Plotting Cost History
 
-* 
+* we are at 0.9 accuracy . we will plot cost hitory to achieve a better accuracy
+* we have costHistory we have plot imported we just call it
+```
+plot({
+	x: regression.costHistory.reverse()
+});
+```
+* plot is empty. we console log history we see NaNs . so we have zero division
+* we also dont have lr optimization
+* we do debuggin with inspector in the recordCost()
+* we suspect log() to be the problem as log(0) is Infinite also log(-x) is error
+
+### Lecture 172 - Fixing Cost History
+
+* we do a trick `.add(1e-7)` before log. to ensure that we dont have log(0) assumming that a small num will not have an effect on lr optimization
+
+### Lecture 174 - Improving Model Accuracy
+
+* best accuracy he got was for 60000 data rows, 80 iterations and batchSize of 500 getting 93% accuracy
+* Ploting helps to find best params
+
+## Section 14 - Appendix: Custom CSV Loader
+
+### Lecture 175 - Loading CSV Files
+
+* we add a folder called loadcsv
