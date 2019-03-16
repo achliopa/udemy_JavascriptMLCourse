@@ -2214,4 +2214,14 @@ function extractColumns(data, columnNames) {
 
 ### Lecture 183 - Shuffling Data via Seed Phrase
 
-* 
+* we add `shuffle: true,` option in config object
+* if we call shuffle on labels and data they will be shuffled in different orders
+* to shuffle we have different options. shuffle before spliting data to labels and data, join data and labels . shuffle then split.
+* we import 'shuffle-seed' lib to do the seeding. it takes a phrase. when we use same seed phrase shuffling is doen in same order. so we can use the same phares for data and labels
+```
+	if(shuffle) {
+		data = shuffleSeed.shuffle(data, 'phrase');
+		labels = shuffleSeed.shuffle(labels, 'phrase');
+	}
+```
+* we can pass seedphrase as option
