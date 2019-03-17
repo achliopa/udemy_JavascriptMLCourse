@@ -2225,3 +2225,23 @@ function extractColumns(data, columnNames) {
 	}
 ```
 * we can pass seedphrase as option
+
+### Lecture 184 - Splitting Test and Training
+
+* splitting we do specing the number of records we want to cut for testdata 
+* we add `splitTest: 1,` into config object to split only 1 record for test
+* we can pass 'false' to not keep records for testing, true to do a 50/50 split or pass a numb for the num of rectords for testing
+* we check if passed vla is a number and then slice the arrays using lodash
+```
+	if (splitTest) {
+		const trainSize = _.isNumber(splitTest) ? splitTest : Math.floor(data.length / 2);
+		return {
+			features: data.slice(0,trainSize),
+			labels: labels.slice(0,trainSize),
+			testFeatures: data.slice(trainSize),
+			testLabels: labels.slice(trainSize) 
+		};
+	} else {
+		return { features: data, labels };
+	}
+```
